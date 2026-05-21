@@ -36,7 +36,7 @@ const Auth = ({ onLogin }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://https://iron-city-gym.onrender.com/api/send-otp', {
+      const response = await fetch('https://iron-city-gym.onrender.com/api/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -61,7 +61,7 @@ const Auth = ({ onLogin }) => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://https://iron-city-gym.onrender.com/api/register', {
+      const response = await fetch('https://iron-city-gym.onrender.com/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name, otp })
@@ -85,7 +85,7 @@ const Auth = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://https://iron-city-gym.onrender.com/api/login', {
+      const response = await fetch('https://iron-city-gym.onrender.com/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -112,7 +112,7 @@ const Auth = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://https://iron-city-gym.onrender.com/api/auth/forgot-password', {
+      const res = await fetch('https://iron-city-gym.onrender.com/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -138,7 +138,7 @@ const Auth = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://https://iron-city-gym.onrender.com/api/auth/verify-reset-otp', {
+      const res = await fetch('https://iron-city-gym.onrender.com/api/auth/verify-reset-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp })
@@ -167,7 +167,7 @@ const Auth = ({ onLogin }) => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('http://https://iron-city-gym.onrender.com/api/auth/reset-password', {
+      const res = await fetch('https://iron-city-gym.onrender.com/api/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp, newPassword: password })

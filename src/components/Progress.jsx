@@ -8,7 +8,7 @@ const Progress = ({ user }) => {
 
   const fetchProgress = async () => {
     try {
-      const res = await fetch(`http://https://iron-city-gym.onrender.com/api/user/progress?email=${user.email}`);
+      const res = await fetch(`https://iron-city-gym.onrender.com/api/user/progress?email=${user.email}`);
       const data = await res.json();
       if (data.success) setProgressData(data.progress);
     } catch (err) {
