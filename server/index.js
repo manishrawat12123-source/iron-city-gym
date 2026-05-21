@@ -156,7 +156,11 @@ app.post('/api/send-otp', (req, res) => {
       subject: "Your Registration OTP",
       text: `Your Iron City verification code is: ${randomOtp}`
     }, (err, info) => {
-      if (!err && !useRealEmail) console.log("Test Mail URL: " + nodemailer.getTestMessageUrl(info));
+      if (err) {
+        console.error('EMAIL ERROR:', err.message);
+      } else {
+        console.log('Email sent successfully to:', email);
+      }
     });
   }
 
