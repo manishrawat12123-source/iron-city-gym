@@ -73,7 +73,7 @@ const dashboardData = {
 
 // Nodemailer Setup
 let transporter;
-const useRealEmail = process.env.EMAIL_USER && process.env.EMAIL_PASS;
+const useRealEmail = true;
 
 if (useRealEmail) {
   transporter = nodemailer.createTransport({
@@ -81,8 +81,8 @@ if (useRealEmail) {
     port: 465,
     secure: true,
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      user: process.env.GMAIL_USER || process.env.EMAIL_USER,
+      pass: process.env.GMAIL_APP_PASS || process.env.EMAIL_PASS
     }
   });
   console.log('Real Gmail SMTP Transporter Active');
