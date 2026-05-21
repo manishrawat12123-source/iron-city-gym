@@ -10,7 +10,7 @@ const Reviews = () => {
   }, []);
 
   const fetchReviews = async () => {
-    const res = await fetch('http://localhost:5000/api/reviews');
+    const res = await fetch('http://https://iron-city-gym.onrender.com/api/reviews');
     const data = await res.json();
     setReviews(data);
   };
@@ -19,7 +19,7 @@ const Reviews = () => {
     e.preventDefault();
     if (!comment) return;
 
-    await fetch('http://localhost:5000/api/reviews', {
+    await fetch('http://https://iron-city-gym.onrender.com/api/reviews', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ comment, rating: parseInt(rating) })

@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://https://iron-city-gym.onrender.com',
         changeOrigin: true,
       },
     },
