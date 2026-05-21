@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "Alex Johnson",
+    "rating": 5,
+    "comment": "Best gym in the city!",
+    "date": "2 days ago"
+  },
+  {
+    "id": 2,
+    "name": "Sarah Miller",
+    "rating": 4,
+    "comment": "Love the trainers here.",
+    "date": "1 week ago"
+  }
+]

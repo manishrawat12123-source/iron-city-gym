@@ -1,0 +1,28 @@
+[
+  {
+    "id": 1,
+    "email": "john@example.com",
+    "password": "password123",
+    "name": "John Doe"
+  },
+  {
+    "id": 2,
+    "email": "manishwamu321@gmail.com",
+    "password": "$2b$10$XvAJOwdWfo/Y0ShXhDdPyuhqqKK0RtuqMr1HrSlunb/JrYAe5pGiq",
+    "name": "manish",
+    "preferences": {
+      "goal": "Weight Loss",
+      "daysPerWeek": "4 Days",
+      "level": "Intermediate"
+    },
+    "workoutPlan": {
+      "goal": "Muscle Gain",
+      "level": "Advanced",
+      "exercises": []
+    },
+    "currentDay": 1,
+    "streak": 0,
+    "isAdmin": true,
+    "plan": "Premium"
+  }
+]
