@@ -152,7 +152,7 @@ app.post('/api/send-otp', (req, res) => {
   
   if (transporter) {
     transporter.sendMail({
-      from: '"Iron City Gym" <support@ironcity.com>',
+      from: 'process.env.GMAIL_USER || process.env.EMAIL_USER',
       to: email,
       subject: "Your Registration OTP",
       text: `Your Iron City verification code is: ${randomOtp}`
@@ -215,7 +215,7 @@ app.post('/api/auth/forgot-password', (req, res) => {
 
   if (transporter) {
     transporter.sendMail({
-      from: '"Iron City Gym" <support@ironcity.com>',
+      from: 'process.env.GMAIL_USER || process.env.EMAIL_USER',
       to: email,
       subject: "Password Reset OTP",
       text: `Your password reset code is: ${otp}. Valid for 10 minutes.`
