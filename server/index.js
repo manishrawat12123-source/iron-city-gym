@@ -73,20 +73,19 @@ const dashboardData = {
 
 // Nodemailer Setup
 let transporter;
-const useRealEmail = true;
 
-if (useRealEmail) {
-  transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.GMAIL_USER || process.env.EMAIL_USER,
-      pass: process.env.GMAIL_APP_PASS || process.env.EMAIL_PASS
-    }
-  });
-  console.log('Real Gmail SMTP Transporter Active');
-} else {
+transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.GMAIL_USER || process.env.EMAIL_USER,
+    pass: process.env.GMAIL_APP_PASS || process.env.EMAIL_PASS
+  }
+});
+console.log('Gmail SMTP Active:', process.env.GMAIL_USER || process.env.EMAIL_USER);
+
+if (false) {
   nodemailer.createTestAccount((err, account) => {
     if (err) {
       console.error('Failed to create a testing account. ' + err.message);
@@ -147,12 +146,12 @@ app.post('/api/send-otp', (req, res) => {
   const { email } = req.body;
   const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
   otpStorage[email] = randomOtp;
-  
-  console.log(`[REGISTRATION OTP]: ${randomOtp}`); 
-  
+
+  console.log(`[REGISTRATION OTP]: ${randomOtp}`);
+
   if (transporter) {
     transporter.sendMail({
-      from: 'process.env.GMAIL_USER || process.env.EMAIL_USER',
+      ffrom: process.env.GMAIL_USER || process.env.EMAIL_USER,
       to: email,
       subject: "Your Registration OTP",
       text: `Your Iron City verification code is: ${randomOtp}`
@@ -166,7 +165,7 @@ app.post('/api/send-otp', (req, res) => {
 
 app.post('/api/register', async (req, res) => {
   const { email, password, name, otp } = req.body;
-  
+
   if (otpStorage[email] !== otp) {
     return res.status(400).json({ success: false, message: "Invalid OTP code" });
   }
@@ -215,7 +214,7 @@ app.post('/api/auth/forgot-password', (req, res) => {
 
   if (transporter) {
     transporter.sendMail({
-      from: 'process.env.GMAIL_USER || process.env.EMAIL_USER',
+      from: process.env.GMAIL_USER || process.env.EMAIL_USER,
       to: email,
       subject: "Password Reset OTP",
       text: `Your password reset code is: ${otp}. Valid for 10 minutes.`
@@ -321,7 +320,7 @@ const generateWorkoutPlan = (goal, days, level) => {
 
     const group = muscleGroups[(i - 1) % muscleGroups.length];
     const exercises = EXERCISES[goal] || EXERCISES["General Fitness"];
-    
+
     plan.push({
       day: i,
       label: `Day ${i}: ${group}`,
@@ -342,7 +341,7 @@ const generateWorkoutPlan = (goal, days, level) => {
 app.post('/api/user/preferences', (req, res) => {
   const { email, goal, daysPerWeek, level } = req.body;
   const user = members.find(m => m.email === email);
-  
+
   if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
   user.preferences = { goal, daysPerWeek, level };
@@ -360,7 +359,7 @@ app.get('/api/user/workout-plan', (req, res) => {
   const email = req.query.email;
   const user = members.find(m => m.email === email);
   if (!user) return res.status(404).json({ success: false, message: "User not found" });
-  
+
   res.json({
     success: true,
     workoutPlan: user.workoutPlan || null,
@@ -418,7 +417,7 @@ app.get('/api/user/diet-plan', async (req, res) => {
 app.get('/api/user/progress', (req, res) => {
   const email = req.query.email;
   if (!email) return res.status(400).json({ success: false, message: "Email required" });
-  
+
   const user = members.find(m => m.email === email);
   if (!user) {
     return res.status(404).json({ success: false, message: "User not found" });
@@ -435,8 +434,8 @@ app.get('/api/admin/progress/pending', (req, res) => {
 
   members.forEach(member => {
     // Only track standard users, not admins
-    if (member.email === 'john@example.com') return; 
-    
+    if (member.email === 'john@example.com') return;
+
     const userProgress = progressData[member.email] || [];
     if (userProgress.length === 0) {
       pendingMembers.push({ ...member, daysAgoText: 'Never updated' });
