@@ -76,8 +76,8 @@ let transporter;
 
 transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.GMAIL_USER || process.env.EMAIL_USER,
     pass: process.env.GMAIL_APP_PASS || process.env.EMAIL_PASS
@@ -157,6 +157,7 @@ app.post('/api/send-otp', (req, res) => {
       text: `Your Iron City verification code is: ${randomOtp}`
     }, (err, info) => {
       if (err) {
+
         console.error('EMAIL ERROR:', err.message);
       } else {
         console.log('Email sent successfully to:', email);
