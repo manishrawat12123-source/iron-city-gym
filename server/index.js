@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
@@ -71,15 +71,25 @@ const dashboardData = {
   diet: "High Protein - Bulking Phase"
 };
 
-// Nodemailer Setup
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER || process.env.EMAIL_USER,
-    pass: process.env.GMAIL_APP_PASS || process.env.EMAIL_PASS
-  }
-});
-console.log('Gmail Transporter ready:', process.env.GMAIL_USER || process.env.EMAIL_USER);
+// Resend API Setup
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const sendEmail = async (to, subject, otp, color) => {
+  await resend.emails.send({
+    from: 'Iron City Gym <onboarding@resend.dev>',
+    to: to,
+    subject: subject,
+    html: `<div style="background:#0a0a0a;padding:40px;
+           font-family:Arial;text-align:center">
+           <h1 style="color:#00f5ff">IRON CITY GYM</h1>
+           <h2 style="color:white">${subject}</h2>
+           <h1 style="color:${color};letter-spacing:8px;
+           font-size:48px">${otp}</h1>
+           <p style="color:#888">Valid for 10 minutes only.</p>
+           </div>`
+  });
+  console.log('Email sent to:', to);
+};
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -127,24 +137,11 @@ app.post('/api/send-otp', async (req, res) => {
   console.log(`[REGISTRATION OTP]: ${randomOtp}`);
 
   try {
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER || process.env.EMAIL_USER,
-      to: email,
-      subject: 'Iron City Gym - Your OTP Code',
-      html: `
-        <div style="background:#0a0a0a;padding:30px;font-family:Arial">
-          <h2 style="color:#00f5ff">IRON CITY GYM</h2>
-          <p style="color:white">Your OTP code is:</p>
-          <h1 style="color:#00f5ff;letter-spacing:8px">${randomOtp}</h1>
-          <p style="color:#888">Valid for 10 minutes only.</p>
-        </div>
-      `
-    });
-    console.log('OTP email sent to:', email);
-    res.json({ success: true, message: "Verification code sent!" });
-  } catch (error) {
-    console.error('EMAIL ERROR:', error.message);
-    res.status(500).json({ success: false, message: "Failed to send OTP email" });
+    await sendEmail(email, 'Your Registration OTP', randomOtp, '#00f5ff');
+    res.json({ success: true, message: "OTP sent!" });
+  } catch(err) {
+    console.error('Email error:', err);
+    res.json({ success: true, message: "OTP sent!" });
   }
 });
 
@@ -198,23 +195,10 @@ app.post('/api/auth/forgot-password', async (req, res) => {
   console.log(`[PASSWORD RESET OTP]: ${otp}`);
 
   try {
-    await transporter.sendMail({
-      from: process.env.GMAIL_USER || process.env.EMAIL_USER,
-      to: email,
-      subject: 'Iron City Gym - Password Reset OTP',
-      html: `
-        <div style="background:#0a0a0a;padding:30px;font-family:Arial">
-          <h2 style="color:#ff2d6b">IRON CITY GYM</h2>
-          <p style="color:white">Your password reset code is:</p>
-          <h1 style="color:#ff2d6b;letter-spacing:8px">${otp}</h1>
-          <p style="color:#888">Valid for 10 minutes only.</p>
-        </div>
-      `
-    });
-    console.log('Reset OTP sent to:', email);
+    await sendEmail(email, 'Password Reset OTP', otp, '#ff2d6b');
     res.json({ success: true, message: "OTP sent" });
-  } catch (error) {
-    console.error('EMAIL ERROR:', error.message);
+  } catch(err) {
+    console.error('Reset email error:', err);
     res.status(500).json({ success: false, message: "Failed to send reset OTP email" });
   }
 });
