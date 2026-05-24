@@ -22,7 +22,7 @@ const WorkoutOnboarding = ({ userEmail, onPlanGenerated }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await fetch('https://iron-city-gym.onrender.com/api/user/preferences', {
+      const res = await fetch('https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/user/preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: userEmail, ...prefs })

@@ -13,13 +13,13 @@ const Dashboard = ({ user, onUpgrade }) => {
   const [progressData, setProgressData] = useState([]);
 
   useEffect(() => {
-    fetch('https://iron-city-gym.onrender.com/api/dashboard')
+    fetch('https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/dashboard')
       .then(res => res.json())
       .then(data => setMemberData(data))
       .catch(err => console.error(err));
 
     if (user?.email) {
-      fetch(`https://iron-city-gym.onrender.com/api/user/diet-plan?email=${user.email}`)
+      fetch(`https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/user/diet-plan?email=${user.email}`)
         .then(res => res.json())
         .then(data => {
           if (data.success && data.plan) {
@@ -28,7 +28,7 @@ const Dashboard = ({ user, onUpgrade }) => {
         })
         .catch(err => console.error(err));
 
-      fetch(`https://iron-city-gym.onrender.com/api/user/progress?email=${user.email}`)
+      fetch(`https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/user/progress?email=${user.email}`)
         .then(res => res.json())
         .then(data => {
           if (data.success) {
@@ -39,7 +39,7 @@ const Dashboard = ({ user, onUpgrade }) => {
         })
         .catch(err => console.error(err));
 
-      fetch(`https://iron-city-gym.onrender.com/api/user/workout-plan?email=${user.email}`)
+      fetch(`https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/user/workout-plan?email=${user.email}`)
         .then(res => res.json())
         .then(data => {
           if (data.success) {
@@ -58,7 +58,7 @@ const Dashboard = ({ user, onUpgrade }) => {
 
   const handleComplete = async (exerciseId) => {
     try {
-      const res = await fetch('https://iron-city-gym.onrender.com/api/user/workout/complete', {
+      const res = await fetch('https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/user/workout/complete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: user.email, day: workoutData.day, exerciseId })
