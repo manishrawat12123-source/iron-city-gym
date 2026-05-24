@@ -10,7 +10,7 @@ const Reviews = () => {
   }, []);
 
   const fetchReviews = async () => {
-    const res = await fetch('https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/reviews');
+    const res = await fetch('https://iron-city-gym.onrender.com/api/reviews');
     const data = await res.json();
     setReviews(data);
   };
@@ -19,7 +19,7 @@ const Reviews = () => {
     e.preventDefault();
     if (!comment) return;
 
-    await fetch('https://4925596f-706b-4b13-9d68-c7ac6dc719db-00-1nafdix9s7aha.pike.replit.dev/api/reviews', {
+    await fetch('https://iron-city-gym.onrender.com/api/reviews', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ comment, rating: parseInt(rating) })
