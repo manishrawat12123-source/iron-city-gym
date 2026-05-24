@@ -72,37 +72,14 @@ const dashboardData = {
 };
 
 // Nodemailer Setup
-let transporter;
-
-transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
   auth: {
     user: process.env.GMAIL_USER || process.env.EMAIL_USER,
     pass: process.env.GMAIL_APP_PASS || process.env.EMAIL_PASS
   }
 });
-console.log('Gmail SMTP Active:', process.env.GMAIL_USER || process.env.EMAIL_USER);
-
-if (false) {
-  nodemailer.createTestAccount((err, account) => {
-    if (err) {
-      console.error('Failed to create a testing account. ' + err.message);
-      return;
-    }
-    console.log('Ethereal Email Test Account Created!');
-    transporter = nodemailer.createTransport({
-      host: account.smtp.host,
-      port: account.smtp.port,
-      secure: account.smtp.secure,
-      auth: {
-        user: account.user,
-        pass: account.pass
-      }
-    });
-  });
-}
+console.log('Gmail Transporter ready:', process.env.GMAIL_USER || process.env.EMAIL_USER);
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -142,30 +119,33 @@ const handleLogin = async (req, res) => {
 app.post('/api/login', handleLogin);
 app.post('/api/auth/login', handleLogin);
 
-app.post('/api/send-otp', (req, res) => {
+app.post('/api/send-otp', async (req, res) => {
   const { email } = req.body;
   const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
   otpStorage[email] = randomOtp;
 
   console.log(`[REGISTRATION OTP]: ${randomOtp}`);
 
-  if (transporter) {
-    transporter.sendMail({
-      ffrom: process.env.GMAIL_USER || process.env.EMAIL_USER,
+  try {
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER || process.env.EMAIL_USER,
       to: email,
-      subject: "Your Registration OTP",
-      text: `Your Iron City verification code is: ${randomOtp}`
-    }, (err, info) => {
-      if (err) {
-
-        console.error('EMAIL ERROR:', err.message);
-      } else {
-        console.log('Email sent successfully to:', email);
-      }
+      subject: 'Iron City Gym - Your OTP Code',
+      html: `
+        <div style="background:#0a0a0a;padding:30px;font-family:Arial">
+          <h2 style="color:#00f5ff">IRON CITY GYM</h2>
+          <p style="color:white">Your OTP code is:</p>
+          <h1 style="color:#00f5ff;letter-spacing:8px">${randomOtp}</h1>
+          <p style="color:#888">Valid for 10 minutes only.</p>
+        </div>
+      `
     });
+    console.log('OTP email sent to:', email);
+    res.json({ success: true, message: "Verification code sent!" });
+  } catch (error) {
+    console.error('EMAIL ERROR:', error.message);
+    res.status(500).json({ success: false, message: "Failed to send OTP email" });
   }
-
-  res.json({ success: true, message: "Verification code sent!" });
 });
 
 app.post('/api/register', async (req, res) => {
@@ -207,7 +187,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // Forgot Password Routes
-app.post('/api/auth/forgot-password', (req, res) => {
+app.post('/api/auth/forgot-password', async (req, res) => {
   const { email } = req.body;
   const user = members.find(m => m.email === email);
   if (!user) return res.status(404).json({ success: false, message: "No account found with this email" });
@@ -217,15 +197,26 @@ app.post('/api/auth/forgot-password', (req, res) => {
 
   console.log(`[PASSWORD RESET OTP]: ${otp}`);
 
-  if (transporter) {
-    transporter.sendMail({
+  try {
+    await transporter.sendMail({
       from: process.env.GMAIL_USER || process.env.EMAIL_USER,
       to: email,
-      subject: "Password Reset OTP",
-      text: `Your password reset code is: ${otp}. Valid for 10 minutes.`
+      subject: 'Iron City Gym - Password Reset OTP',
+      html: `
+        <div style="background:#0a0a0a;padding:30px;font-family:Arial">
+          <h2 style="color:#ff2d6b">IRON CITY GYM</h2>
+          <p style="color:white">Your password reset code is:</p>
+          <h1 style="color:#ff2d6b;letter-spacing:8px">${otp}</h1>
+          <p style="color:#888">Valid for 10 minutes only.</p>
+        </div>
+      `
     });
+    console.log('Reset OTP sent to:', email);
+    res.json({ success: true, message: "OTP sent" });
+  } catch (error) {
+    console.error('EMAIL ERROR:', error.message);
+    res.status(500).json({ success: false, message: "Failed to send reset OTP email" });
   }
-  res.json({ success: true, message: "OTP sent" });
 });
 
 app.post('/api/auth/verify-reset-otp', (req, res) => {
